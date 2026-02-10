@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from pages.login_page import LoginPage
 from pages.base_page import BasePage
 
 
@@ -15,8 +14,8 @@ class MainPage(BasePage):
     def should_be_login_link(self):
         assert self.is_element_present(*self.LOGIN_LINK), "Login Link is not present"
 
-    def go_to_login_page(self) -> LoginPage:
+    def go_to_login_page(self) -> None:
         login_link = self.browser.find_element(*self.LOGIN_LINK)
         login_link.click()
-        return LoginPage(self.browser, self.browser.current_url)
+        # return LoginPage(self.browser, self.browser.current_url)
 
