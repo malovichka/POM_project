@@ -47,6 +47,7 @@ def browser(request) -> Iterator[WebDriver]:
         chrome_options.add_experimental_option(
             "prefs", {"intl.accept_languages": user_language}
         )
+        chrome_options.add_argument("--start-maximized")
         driver = webdriver.Chrome(options=chrome_options)
 
     elif browser_name == "firefox":
@@ -57,6 +58,7 @@ def browser(request) -> Iterator[WebDriver]:
             firefox_options.add_argument("-headless")
         firefox_options.set_preference("intl.accept_language", user_language)
         driver = webdriver.Firefox(options=firefox_options)
+        driver.maximize_window()
 
     else:
         raise pytest.UsageError("--browser_name should be chrome or firefox")
