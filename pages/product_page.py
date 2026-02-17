@@ -1,4 +1,3 @@
-import re
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
@@ -61,3 +60,9 @@ class ProductPage(BasePage):
         assert (
             header_total == expected_total
         ), f"Cart total in header should be {expected_total}, got {header_total} instead"
+
+    def should_not_show_success_message(self):
+        assert self.is_element_not_present(*self.MESSAGE_PRODUCT_ADDED), "Success alert is present, and it should not be"
+
+    def should_disappear_success_message(self):
+        assert self.is_element_gone(*self.MESSAGE_PRODUCT_ADDED), "Success alert did not disappear in given timeout"        

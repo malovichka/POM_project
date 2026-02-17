@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 import pytest
 
 
-def test_quest_can_add_product_to_basket(browser: WebDriver):
+def test_guest_can_add_product_to_basket(browser: WebDriver):
     """
     Verify that a guest user can add a product to the basket from a promotion page.
 
