@@ -1,6 +1,7 @@
 import math
 import re
 import pytest
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -12,9 +13,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:
-    # CONSTANTS
+    # CONSTANTS AND LOCATORS
     BASE_URL = "http://selenium1py.pythonanywhere.com/"
-    BASIC_PRODUCT_URL = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+    BASIC_PRODUCT_URL = (
+        "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+    )
     OLD_PROMO_URL = "http://selenium1py.pythonanywhere.com/catalogue/the-shellcoders-handbook_209/?promo=newYear"
     PROMO_URL = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
     PROMO_LINKS = [
@@ -32,15 +35,23 @@ class BasePage:
         "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
         "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9",
     ]
+    LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
 
     def __init__(self, browser: WebDriver, url: str, timeout=10) -> None:
         self.browser = browser
         self.url = url
         self.timeout = timeout
-        #self.browser.implicitly_wait(timeout)
+        # self.browser.implicitly_wait(timeout)
 
     def open(self) -> None:
         self.browser.get(self.url)
+
+    def should_be_login_link(self):
+        assert self.is_element_present(*self.LOGIN_LINK), "Login Link is not present"
+
+    def go_to_login_page(self) -> None:
+        login_link = self.browser.find_element(*self.LOGIN_LINK)
+        login_link.click()
 
     def is_element_present(self, how: str, what: str) -> bool:
         try:
@@ -60,13 +71,15 @@ class BasePage:
         except TimeoutException:
             return True
         return False
-    
+
     def is_element_gone(self, how: str, what: str) -> bool:
         try:
-            WebDriverWait(self.browser, self.timeout, 1).until_not(expected_conditions.presence_of_element_located((how, what)))
+            WebDriverWait(self.browser, self.timeout, 1).until_not(
+                expected_conditions.presence_of_element_located((how, what))
+            )
         except TimeoutException:
-            return False 
-        return True    
+            return False
+        return True
 
     def get_element_text(self, how: str, what: str) -> str:
         self.is_element_present(how, what)
