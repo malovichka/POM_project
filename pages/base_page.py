@@ -15,9 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 class BasePage:
     # CONSTANTS AND LOCATORS
     BASE_URL = "http://selenium1py.pythonanywhere.com/"
-    BASIC_PRODUCT_URL = (
-        "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
-    )
+    PRODUCT_URL = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
     OLD_PROMO_URL = "http://selenium1py.pythonanywhere.com/catalogue/the-shellcoders-handbook_209/?promo=newYear"
     PROMO_URL = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
     PROMO_LINKS = [
@@ -36,22 +34,18 @@ class BasePage:
         "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9",
     ]
     LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
+    VIEW_CART_BUTTON = (
+        By.CSS_SELECTOR,
+        ".basket-mini.hidden-xs .btn-default[href*='/basket/']",
+    )
 
     def __init__(self, browser: WebDriver, url: str, timeout=10) -> None:
         self.browser = browser
         self.url = url
         self.timeout = timeout
-        # self.browser.implicitly_wait(timeout)
 
     def open(self) -> None:
         self.browser.get(self.url)
-
-    def should_be_login_link(self):
-        assert self.is_element_present(*self.LOGIN_LINK), "Login Link is not present"
-
-    def go_to_login_page(self) -> None:
-        login_link = self.browser.find_element(*self.LOGIN_LINK)
-        login_link.click()
 
     def is_element_present(self, how: str, what: str) -> bool:
         try:
@@ -104,3 +98,19 @@ class BasePage:
             alert.accept()
         except NoAlertPresentException:
             print("No second alert presented")
+
+    def should_be_url(self, endpoint: str):
+        assert (
+            endpoint in self.browser.current_url
+        ), f"Expected {endpoint} missing in current URL: {self.browser.current_url}"
+
+    def should_be_login_link(self):
+        assert self.is_element_present(*self.LOGIN_LINK), "Login Link is not present"
+
+    def go_to_login_page(self) -> None:
+        self.is_element_present(*self.LOGIN_LINK)
+        self.browser.find_element(*self.LOGIN_LINK).click()
+
+    def go_to_cart_page(self) -> None:
+        self.is_element_present(*self.VIEW_CART_BUTTON)
+        self.browser.find_element(*self.VIEW_CART_BUTTON).click()
