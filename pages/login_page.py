@@ -23,13 +23,9 @@ class LoginPage(BasePage):
         self.should_be_register_form()
 
     def should_be_login_url(self):
-        # реализуйте проверку на корректный url адрес
-        assert (
-            self.LOGIN_PAGE_ENDPOINT in self.browser.current_url
-        ), f"Expected to be login url, ACTUAL: {self.browser.current_url}"
+        self.should_be_url(self.LOGIN_PAGE_ENDPOINT)
 
     def should_be_login_form(self):
-        # реализуйте проверку, что есть форма логина
         assert self.is_element_present(
             *self.LOGIN_EMAIL
         ), "Login email address field is missing"
@@ -39,7 +35,6 @@ class LoginPage(BasePage):
         assert self.is_element_present(*self.LOGIN_BUTTON), "Login button is missing"
 
     def should_be_register_form(self):
-        # реализуйте проверку, что есть форма регистрации на странице
         assert self.is_element_present(
             *self.REGISTER_EMAIL
         ), "Email input in Registration form is missing"
