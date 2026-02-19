@@ -47,3 +47,11 @@ class LoginPage(BasePage):
         assert self.is_element_present(
             *self.REGISTER_BUTTON
         ), "Register button in Registration form is missing"
+
+
+    def register_new_user(self):
+        username, password = self.generate_credentials_for_new_user()
+        self.browser.find_element(*self.REGISTER_EMAIL).send_keys(username)
+        self.browser.find_element(*self.REGISTER_PASSWORD).send_keys(password)
+        self.browser.find_element(*self.REGISTER_CONFIM_PASSWORD).send_keys(password)
+        self.browser.find_element(*self.REGISTER_BUTTON).click()  

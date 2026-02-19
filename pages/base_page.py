@@ -10,6 +10,8 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+import random
+import string
 
 
 class BasePage:
@@ -38,6 +40,7 @@ class BasePage:
         By.CSS_SELECTOR,
         ".basket-mini.hidden-xs .btn-default[href*='/basket/']",
     )
+    USER_ICON = (By.CSS_SELECTOR, ".icon-user")
 
     def __init__(self, browser: WebDriver, url: str, timeout=10) -> None:
         self.browser = browser
@@ -114,3 +117,17 @@ class BasePage:
     def go_to_cart_page(self) -> None:
         self.is_element_present(*self.VIEW_CART_BUTTON)
         self.browser.find_element(*self.VIEW_CART_BUTTON).click()
+
+    def should_be_authorized(self):
+        assert self.is_element_present(
+            *self.USER_ICON
+        ), "User icon is missing, probably unauthorized user"
+
+    def generate_credentials_for_new_user(self) -> tuple[str, str]:
+        email = self.generate_random_string(7) + "@fakemail.com"
+        password = self.generate_random_string(10)
+        return email, password
+
+    def generate_random_string(self, length: int) -> str:
+        chars = string.ascii_letters + string.digits
+        return "".join(random.choices(chars, k=length))
